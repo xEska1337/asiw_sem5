@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "0fae06d9-c858-4cc2-b9c2-2de7da9ee488",
+    "name": "Lab 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59038784",
+    "_collection_link": "https://go.postman.co/collection/59038784-0fae06d9-c858-4cc2-b9c2-2de7da9ee488?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET /api/cars",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5017/api/Cars",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5017",
+          "path": [
+            "api",
+            "Cars"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET /api/cars/{id}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5017/api/Cars/62d37afc-fef3-4a03-9319-ebf42a33748f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5017",
+          "path": [
+            "api",
+            "Cars",
+            "62d37afc-fef3-4a03-9319-ebf42a33748f"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST /api/cars",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const responseBody = pm.response.json();\r\n\r\npm.collectionVariables.set(\"carId\", responseBody.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"brand\": \"Skoda\",\r\n  \"model\": \"Octavia\",\r\n  \"doorsNumber\": 5,\r\n  \"luggageCapacity\": 600,\r\n  \"engineCapacity\": 1498,\r\n  \"fuelType\": 0,\r\n  \"productionDate\": \"2023-04-15T00:00:00Z\",\r\n  \"averageFuelConsumption\": 5.4,\r\n  \"bodyType\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5017/api/Cars",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5017",
+          "path": [
+            "api",
+            "Cars"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT /api/cars/{id}",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"brand\": \"Skoda\",\r\n  \"model\": \"Octavia RS\",\r\n  \"doorsNumber\": 5,\r\n  \"luggageCapacity\": 600,\r\n  \"engineCapacity\": 1984,\r\n  \"fuelType\": 0,\r\n  \"productionDate\": \"2023-04-15T00:00:00Z\",\r\n  \"averageFuelConsumption\": 6.1,\r\n  \"bodyType\": 2\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:5017/api/cars/{{carId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5017",
+          "path": [
+            "api",
+            "cars",
+            "{{carId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE /api/cars/{id}",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5017/api/cars/{{carId}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5017",
+          "path": [
+            "api",
+            "cars",
+            "{{carId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "carId",
+      "value": ""
+    }
+  ]
+}
