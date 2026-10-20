@@ -1,56 +1,55 @@
-﻿using Cars.Domain;
-using Cars.Infrastructure;
+﻿using Cars.Application.Cars;
+using Cars.Domain;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cars.API.Controllers;
 
-public class CarsController(DataContext context) : BaseApiController
+public class CarsController(ISender sender) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Car>>> GetCars()
     {
-        return await context.Cars.AsNoTracking().ToListAsync();
+        return await sender.Send(new GetCarsList.Query());
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<Car>> GetCar(Guid id)
     {
-        var car = await context.Cars.AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var car = await sender.Send(new Details.Query { Id = id });
 
-        if (car is null) return NotFound();
+        if (car is null)
+        {
+            return NotFound();
+        }
 
         return car;
     }
-    
+
     [HttpPost]
     public async Task<ActionResult<Car>> CreateCar(Car car)
     {
-        context.Cars.Add(car);
-        await context.SaveChangesAsync();
+        var result = await sender.Send(new Create.Command { Car = car });
 
-        return CreatedAtAction(nameof(GetCar), new { id = car.Id }, car);
+        return CreatedAtAction(
+            nameof(GetCar),
+            new { id = result.Id },
+            result);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateCar(Guid id, Car car)
     {
-        var existingCar = await context.Cars.FindAsync(id);
+        var result = await sender.Send(new Edit.Command
+        {
+            Id = id,
+            Car = car
+        });
 
-        if (existingCar is null) return NotFound();
-
-        existingCar.Brand = car.Brand;
-        existingCar.Model = car.Model;
-        existingCar.DoorsNumber = car.DoorsNumber;
-        existingCar.LuggageCapacity = car.LuggageCapacity;
-        existingCar.EngineCapacity = car.EngineCapacity;
-        existingCar.FuelType = car.FuelType;
-        existingCar.ProductionDate = car.ProductionDate;
-        existingCar.AverageFuelConsumption = car.AverageFuelConsumption;
-        existingCar.BodyType = car.BodyType;
-
-        await context.SaveChangesAsync();
+        if (!result)
+        {
+            return NotFound();
+        }
 
         return NoContent();
     }
@@ -58,12 +57,12 @@ public class CarsController(DataContext context) : BaseApiController
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteCar(Guid id)
     {
-        var car = await context.Cars.FindAsync(id);
+        var result = await sender.Send(new Delete.Command { Id = id });
 
-        if (car is null) return NotFound();
-
-        context.Cars.Remove(car);
-        await context.SaveChangesAsync();
+        if (!result)
+        {
+            return NotFound();
+        }
 
         return NoContent();
     }

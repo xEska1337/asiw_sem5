@@ -8,6 +8,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Cars.Domain\Cars.Domain.csproj" />
+      <ProjectReference Include="..\Cars.Infrastructure\Cars.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.2.0" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
     </ItemGroup>
 
 </Project>
