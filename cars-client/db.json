@@ -1,0 +1,29 @@
+{
+  "cars": [
+    {
+      "id": "1",
+      "brand": "Toyota",
+      "model": "Corolla",
+      "doorsNumber": 5,
+      "luggageCapacity": 470,
+      "engineCapacity": 1800,
+      "fuelType": 1,
+      "productionDate": "2022-05-10",
+      "averageFuelConsumption": 6.4,
+      "bodyType": 1
+    },
+    {
+      "id": "2",
+      "brand": "Skoda",
+      "model": "Octavia",
+      "doorsNumber": 5,
+      "luggageCapacity": 600,
+      "engineCapacity": 1500,
+      "fuelType": 1,
+      "productionDate": "2021-03-15",
+      "averageFuelConsumption": 6.8,
+      "bodyType": 1
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
