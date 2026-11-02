@@ -32,6 +32,7 @@ nav {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 nav a {
@@ -126,11 +127,11 @@ h1 {
   color: var(--accent);
 }
 
-.actions button {
+.actions .delete-button {
   color: #d33;
 }
 
-.actions button:hover {
+.actions .delete-button:hover {
   border-color: #d33;
   color: #d33;
 }
@@ -209,4 +210,71 @@ h1 {
   background: rgba(221, 51, 51, 0.1);
   border-radius: 6px;
   margin: 0;
+}
+
+.cars-toolbar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.cars-toolbar input[type='search'] {
+  min-width: 280px;
+  padding: 9px;
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.favorite-filter {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+
+.actions .delete-button {
+  color: #d33;
+}
+
+.actions .delete-button:hover {
+  border-color: #d33;
+  color: #d33;
+}
+
+.actions .favorite-button {
+  background-color: #64748b;
+  border-color: #64748b;
+  color: #fff;
+}
+
+.actions .favorite-button:hover {
+  background-color: #475569;
+  border-color: #475569;
+  color: #fff;
+}
+
+.actions .active-favorite {
+  background-color: #d97706;
+  border-color: #d97706;
+  color: #fff;
+}
+
+.actions .active-favorite:hover {
+  background-color: #b45309;
+  border-color: #b45309;
+  color: #fff;
+}
+
+.favorite-counter {
+  margin-left: auto;
+  padding: 8px 12px;
+  color: #fff;
+  font-weight: 600;
+  background: #d97706;
+  border-radius: 6px;
+  font-size: 14px;
 }

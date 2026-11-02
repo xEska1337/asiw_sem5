@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link, useParams } from 'react-router';
 import type { Car } from '../models/Car';
 import { getCarById } from '../services/carService';
+import { useCarUiStore } from '../store/useCarUiStore';
 
 const fuelLabels: Record<number, string> = {
     0: 'Petrol', 1: 'Diesel', 2: 'Hybrid', 3: 'Electric', 4: 'LPG'
@@ -17,6 +19,10 @@ export default function CarDetailsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const favoriteCarIds = useCarUiStore((state) => state.favoriteCarIds);
+    const toggleFavorite = useCarUiStore((state) => state.toggleFavorite);
+    const isFavorite = car ? favoriteCarIds.includes(car.id) : false;
+
     useEffect(() => {
         if (!id) return;
         const controller = new AbortController();
@@ -26,11 +32,19 @@ export default function CarDetailsPage() {
                 setCar(data);
                 setError(null);
             })
-            .catch((err: unknown) => {
-                if (controller.signal.aborted) return;
-                setError(err instanceof Error ? err.message : 'Failed to load data.');
+            .catch((caughtError: unknown) => {
+                if (axios.isCancel(caughtError)) return;
+                setError(
+                    caughtError instanceof Error
+                        ? caughtError.message
+                        : 'An unknown error occurred.',
+                );
             })
-            .finally(() => setLoading(false));
+            .finally(() => {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            });
         return () => controller.abort();
     }, [id]);
 
@@ -67,6 +81,13 @@ export default function CarDetailsPage() {
 
             <div className="actions">
                 <Link to="/cars">← Back to list</Link>
+                <button
+                    type="button"
+                    className={isFavorite ? 'favorite-button active-favorite' : 'favorite-button'}
+                    onClick={() => toggleFavorite(car.id)}
+                >
+                    {isFavorite ? '★ Favourite' : '♡ Favourite'}
+                </button>
                 <Link to={`/cars/${car.id}/edit`}>Edit</Link>
             </div>
         </section>

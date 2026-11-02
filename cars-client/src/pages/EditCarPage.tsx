@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useNavigate, useParams } from 'react-router';
 import CarForm from '../components/CarForm';
 import type { Car, NewCar } from '../models/Car';
@@ -34,11 +35,19 @@ export default function EditCarPage() {
                 setCar(data);
                 setError(null);
             })
-            .catch((err: unknown) => {
-                if (controller.signal.aborted) return;
-                setError(err instanceof Error ? err.message : 'Failed to load data.');
+            .catch((caughtError: unknown) => {
+                if (axios.isCancel(caughtError)) return;
+                setError(
+                    caughtError instanceof Error
+                        ? caughtError.message
+                        : 'An unknown error occurred.',
+                );
             })
-            .finally(() => setLoading(false));
+            .finally(() => {
+                if (!controller.signal.aborted) {
+                    setLoading(false);
+                }
+            });
         return () => controller.abort();
     }, [id]);
 
