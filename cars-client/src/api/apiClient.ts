@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/useAuthStore';
 
 export const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -11,6 +12,12 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
+        const user = useAuthStore.getState().user;
+
+        if (user?.token) {
+            config.headers.Authorization = `Bearer ${user.token}`;
+        }
+
         console.log(
             `[Axios] ${config.method?.toUpperCase()} ${config.url}`,
         );
@@ -28,5 +35,15 @@ apiClient.interceptors.response.use(
 
         return response;
     },
-    (error) => Promise.reject(error),
+    (error) => {
+        if (error.response?.status === 401) {
+            useAuthStore.getState().logout();
+        }
+
+        console.log(
+            `[Axios] ${error.response?.status ?? 'ERR'} ${error.config?.url ?? ''}`,
+        );
+
+        return Promise.reject(error);
+    },
 );
