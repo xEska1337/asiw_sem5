@@ -84,6 +84,20 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 
+var webRootPath = builder.Environment.WebRootPath 
+                  ?? Path.Combine(builder.Environment.ContentRootPath, "wwwroot");
+
+if (!Directory.Exists(webRootPath))
+{
+    Directory.CreateDirectory(webRootPath);
+}
+
+var uploadPath = Path.Combine(webRootPath, "uploads", "cars");
+if (!Directory.Exists(uploadPath))
+{
+    Directory.CreateDirectory(uploadPath);
+}
+
 app.UseMiddleware<ApiExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -93,6 +107,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
@@ -106,7 +122,7 @@ try
     var context = services.GetRequiredService<DataContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context);
-
+    await FeatureSeed.SeedAsync(context);
     var userManager = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await IdentitySeed.SeedAsync(userManager, roleManager);
